@@ -1,6 +1,7 @@
 library(rvest)
 library(dplyr)
 library(xlsx)
+library(stringr)
 #library(tidyverse)
 
 getPublisher = function(x) {
@@ -15,7 +16,7 @@ lnArtist = data.frame()
 lnPublishers = data.frame()
 lnImgSrc = data.frame()
 
-for (pageResult in 1 : 2){
+for (pageResult in 2 : 3){
   print(paste("Scrapping Page:", pageResult))
   
   link = paste0("https://ln.hako.re/xuat-ban?page=", pageResult)
@@ -25,8 +26,8 @@ for (pageResult in 1 : 2){
 
   titles = page %>% html_nodes(".series-name") %>% html_text()
   description = page %>% html_nodes(".series-summary") %>% html_text()
-  authors = page %>% html_nodes("#licensed-list .col-md-6:nth-child(1) a") %>% html_text()
   artists = page %>% html_nodes("#licensed-list .col-md-6:nth-child(2) a") %>% html_text()
+  authors = page %>% html_nodes("#licensed-list .col-md-6:nth-child(1) a") %>% html_text()
   publishers = sapply(bookLinks, FUN = getPublisher, USE.NAMES = FALSE)
   
   imgSource <- page %>% html_nodes("#licensed-list .img-in-ratio") %>% html_attr('style')
@@ -36,7 +37,7 @@ for (pageResult in 1 : 2){
   imgName <- str_sub(imgSource, 38)
   imgName <- paste0("CuoiKy\\HakoImg\\", imgName)
   
-  lnBook = rbind(lnBook, data.frame(titles, description, publishers, imgName, artists, authors, stringsAsFactors = FALSE))
+  lnBook = rbind(lnBook, data.frame(titles, description, artists, authors, publishers, imgName, stringsAsFactors = FALSE))
   lnPublishers = rbind(lnPublishers, data.frame(publishers, stringsAsFactors = FALSE))
   lnArtist = rbind(lnArtist, data.frame(artists, stringsAsFactors = FALSE))
   
