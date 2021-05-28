@@ -1,0 +1,3 @@
+source('D:/Code/R/B42/sample.R')
+install.packages("RJSONIO")
+install.packages("gdata")
